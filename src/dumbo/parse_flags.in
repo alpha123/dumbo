@@ -1,0 +1,11 @@
+normal = 0
+by_parser = 1 << 0
+implicit_end_tag = 1 << 1
+implied = 1 << 3
+converted_from_end_tag = 1 << 4
+from_isindex = 1 << 5
+from_image = 1 << 6
+reconstructed_formatting_element = 1 << 7
+adoption_agency_cloned = 1 << 8
+adoption_agency_moved = 1 << 9
+foster_parented = 1 << 10
