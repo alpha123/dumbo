@@ -7,7 +7,7 @@ import dumbo.attribute;
 
 class Node {
     Nullable!Node parent;
-    const GumboNode * c_node;
+    const GumboNode *c_node;
 
     this(const GumboNode *internal_node) {
         parent = null;
@@ -25,6 +25,8 @@ class Element : Node {
     const string tag;
 
     Attribute[] attrs;
+    Node[] children;
+    Element[] elem_children;
 
     this(const GumboNode *internal_node) {
         super(internal_node);
@@ -33,12 +35,24 @@ class Element : Node {
 
         for (size_t i = 0; i < internal_node.v.element.attributes.length; i++)
             attrs ~= new Attribute(cast(const GumboAttribute *)internal_node.v.element.attributes.data[i]);
+
+        for (size_t i = 0; i < internal_node.v.element.children.length; i++) {
+            auto kid = Node.fromCApi(cast(const GumboNode *)internal_node.v.element.children.data[i]);
+            kid.parent = this;
+            children ~= kid;
+            if (kid.c_node.type == GumboNodeType.GUMBO_NODE_ELEMENT)
+                elem_children ~= cast(Element)kid;
+        }
     }
 }
 
 class TextNode : Node {
+    const string text;
+
     this(const GumboNode *internal_node) {
         super(internal_node);
+
+        text = to!string(internal_node.v.text);
     }
 }
 
